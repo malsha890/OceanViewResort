@@ -8,7 +8,7 @@ public class Staff {
     private String password;
     private String role;
 
-    public Staff() {}
+    public Staff(String string, String string2, String hashedPassword, String string3) {}
 
     public Staff(int staffId, String fullName, String email, String role) {
         this.staffId = staffId;
@@ -17,7 +17,11 @@ public class Staff {
         this.role = role;
     }
 
-    public int getStaffId() { return staffId; }
+    public Staff() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public int getStaffId() { return staffId; }
     public void setStaffId(int staffId) { this.staffId = staffId; }
 
     public String getFullName() { return fullName; }

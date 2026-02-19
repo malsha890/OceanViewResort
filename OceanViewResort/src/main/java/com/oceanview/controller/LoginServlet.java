@@ -17,25 +17,31 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        StaffDAO staffDAO = new StaffDAO();
-        Staff staff = staffDAO.login(email, password);
+        try {
+            StaffDAO dao = new StaffDAO();   // create object
+            Staff staff = dao.login(email, password);  // call properly
 
-        if (staff != null) {
+            if (staff != null) {
 
-            HttpSession session = request.getSession();
-            session.setAttribute("staff", staff);
+                HttpSession session = request.getSession();
+                session.setAttribute("staff", staff);
 
-            // ROLE BASED REDIRECT
-            if (staff.getRole().equals("ADMIN")) {
-                response.sendRedirect("AdminDashboard.jsp");
+                if ("ADMIN".equals(staff.getRole())) {
+                    response.sendRedirect("admin/staff");
+                } else {
+                    response.sendRedirect("StaffDashboard.jsp");
+                }
+
             } else {
-                response.sendRedirect("StaffDashboard.jsp");
+                request.setAttribute("error", "Invalid Email or Password!");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
             }
 
-        } else {
-            request.setAttribute("error", "Invalid Email or Password!");
+        } catch (Exception e) {
+            e.printStackTrace();  // Keep this
+            request.setAttribute("error", e.getMessage());  // Show real error
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
+
     }
 }
-
