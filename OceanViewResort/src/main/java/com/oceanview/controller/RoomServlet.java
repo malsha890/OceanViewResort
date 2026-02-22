@@ -27,9 +27,9 @@ public class RoomServlet extends HttpServlet {
 
         String action = request.getParameter("action");
 
-        try (Connection conn = DBConnection.getConnection()) {
+        try (Connection con = DBConnection.getConnection()) {
 
-            RoomDAO dao = new RoomDAO(conn);
+            RoomDAO dao = new RoomDAO();
 
             if ("search".equals(action)) {
                 String keyword = request.getParameter("keyword");
@@ -54,7 +54,7 @@ public class RoomServlet extends HttpServlet {
 
         try (Connection conn = DBConnection.getConnection()) {
 
-            RoomDAO dao = new RoomDAO(conn);
+            RoomDAO dao = new RoomDAO();
             Room r = new Room();
 
             if ("add".equals(action)) {

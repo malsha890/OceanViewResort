@@ -1,6 +1,7 @@
 package com.oceanview.model;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Reservation {
 
@@ -8,50 +9,127 @@ public class Reservation {
     private String customerName;
     private String customerPhone;
     private String customerEmail;
-
     private int roomId;
-    private int staffId;
+    private LocalDate checkIn;
+    private LocalDate checkOut;
+    private String status; // PENDING, CONFIRMED, CANCELLED
+    private LocalDateTime createdAt;
+    private String roomType;
+    private String customerAddress;
 
-    private Date checkIn;
-    private Date checkOut;
-    private double totalAmount;
-    private String status;
-    private Date createdAt;
+    // =========================
+    // Constructors
+    // =========================
 
-    public Reservation() {}
+    public Reservation() {
+    }
 
-    // Getters & Setters
+    public Reservation(String customerName, String customerPhone,
+                       String customerEmail, int roomId,
+                       LocalDate checkIn, LocalDate checkOut,
+                       String status, String roomType,
+                       String customerAddress) {
 
-    public int getReservationId() { return reservationId; }
-    public void setReservationId(int reservationId) { this.reservationId = reservationId; }
+        this.customerName = customerName;
+        this.customerPhone = customerPhone;
+        this.customerEmail = customerEmail;
+        this.roomId = roomId;
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
+        this.status = status;
+        this.roomType = roomType;
+        this.customerAddress = customerAddress;
+    }
 
-    public String getCustomerName() { return customerName; }
-    public void setCustomerName(String customerName) { this.customerName = customerName; }
+    // =========================
+    // Getters and Setters
+    // =========================
 
-    public String getCustomerPhone() { return customerPhone; }
-    public void setCustomerPhone(String customerPhone) { this.customerPhone = customerPhone; }
+    public int getReservationId() {
+        return reservationId;
+    }
 
-    public String getCustomerEmail() { return customerEmail; }
-    public void setCustomerEmail(String customerEmail) { this.customerEmail = customerEmail; }
+    public void setReservationId(int reservationId) {
+        this.reservationId = reservationId;
+    }
 
-    public int getRoomId() { return roomId; }
-    public void setRoomId(int roomId) { this.roomId = roomId; }
+    public String getCustomerName() {
+        return customerName;
+    }
 
-    public int getStaffId() { return staffId; }
-    public void setStaffId(int staffId) { this.staffId = staffId; }
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 
-    public Date getCheckIn() { return checkIn; }
-    public void setCheckIn(Date checkIn) { this.checkIn = checkIn; }
+    public String getCustomerPhone() {
+        return customerPhone;
+    }
 
-    public Date getCheckOut() { return checkOut; }
-    public void setCheckOut(Date checkOut) { this.checkOut = checkOut; }
+    public void setCustomerPhone(String customerPhone) {
+        this.customerPhone = customerPhone;
+    }
 
-    public double getTotalAmount() { return totalAmount; }
-    public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+    }
 
-    public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+    public int getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
+    }
+
+    public LocalDate getCheckIn() {
+        return checkIn;
+    }
+
+    public void setCheckIn(LocalDate checkIn) {
+        this.checkIn = checkIn;
+    }
+
+    public LocalDate getCheckOut() {
+        return checkOut;
+    }
+
+    public void setCheckOut(LocalDate checkOut) {
+        this.checkOut = checkOut;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
+
+    public String getCustomerAddress() {
+        return customerAddress;
+    }
+
+    public void setCustomerAddress(String customerAddress) {
+        this.customerAddress = customerAddress;
+    }
 }

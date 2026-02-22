@@ -1,188 +1,134 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.util.*" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="java.util.List" %>
 <%@ page import="com.oceanview.model.Reservation" %>
-
-<%
-List<Reservation> list =
-    (List<Reservation>) request.getAttribute("list");
-
-if (list == null) list = new ArrayList<>();
-%>
-
-
 <!DOCTYPE html>
 <html>
 <head>
-<title>Manage Reservations</title>
+    <title>Reservation Management</title>
 
-<style>
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #f4f6f9;
-    margin: 0;
-    padding: 20px;
-}
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/assets/css/style.css">
 
-h2 {
-    color: #1e293b;
-}
-
-.container {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-}
-
-form input, form select {
-    padding: 8px;
-    margin: 5px;
-}
-
-button {
-    padding: 6px 12px;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.add-btn { background:#2563eb; color:white; }
-.edit-btn { background:#f59e0b; color:white; }
-.delete-btn { background:#dc2626; color:white; }
-
-table {
-    width:100%;
-    border-collapse: collapse;
-    margin-top:20px;
-}
-
-th, td {
-    padding:10px;
-    border-bottom:1px solid #ddd;
-    text-align:center;
-}
-
-th {
-    background:#1e293b;
-    color:white;
-}
-.search-box {
-    margin-bottom: 15px;
-}
-</style>
+    <style>
+        body { font-family: Arial; }
+        .container { width: 95%; margin: 20px auto; }
+        .form-section, .table-section {
+            background: #f4f6f9;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        table th { background: #007bff; color: white; }
+        .btn {
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            color: white;
+        }
+        .btn-save { background: green; }
+        .btn-cancel { background: red; }
+    </style>
 </head>
-<body>
 
-<h2>Reservation Management</h2>
+<body>
 
 <div class="container">
 
-<!-- ================= SEARCH ================= -->
-<div class="search-box">
-<form method="get" action="${pageContext.request.contextPath}/staff/reservations">
-    <input type="hidden" name="action" value="search">
-    <input type="text" name="keyword" placeholder="Search by Name or Phone" required>
-    <button class="add-btn">Search</button>
-    <a href="${pageContext.request.contextPath}/staff/reservations">
-        <button type="button">Reset</button>
-    </a>
-</form>
-</div>
+    <h2>Reservation Management</h2>
 
-<!-- ================= ADD FORM ================= -->
-<h3>Add New Reservation</h3>
+    <!-- ================= ADD RESERVATION FORM ================= -->
+    <div class="form-section">
+        <h3>Add Reservation</h3>
 
-<form method="post" action="${pageContext.request.contextPath}/staff/reservations">
-    <input type="hidden" name="action" value="add">
+        <form action="${pageContext.request.contextPath}/staff/reservations"
+              method="post">
 
-    <input type="text" name="name" placeholder="Customer Name" required>
-    <input type="text" name="phone" placeholder="Phone" required>
-    <input type="email" name="email" placeholder="Email" required>
-    <input type="number" name="roomId" placeholder="Room ID" required>
+            <input type="hidden" name="action" value="add"/>
 
-    <input type="date" name="checkIn" required>
-    <input type="date" name="checkOut" required>
+            <label>Customer Name:</label>
+            <input type="text" name="name" required/>
 
-    
+            <label>Phone:</label>
+            <input type="text" name="phone"/>
 
-    <select name="status">
-        <option value="PENDING">PENDING</option>
-        <option value="CONFIRMED">CONFIRMED</option>
-        <option value="CANCELLED">CANCELLED</option>
-    </select>
+            <label>Email:</label>
+            <input type="email" name="email"/>
 
-    <button type="submit" class="add-btn">Add</button>
-</form>
+            <label>Address:</label>
+            <input type="text" name="address" required/>
 
-<!-- ================= TABLE ================= -->
-<h3>All Reservations</h3>
+            <label>Room ID:</label>
+            <input type="number" name="roomId" required/>
 
-<table>
-<tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Phone</th>
-    <th>Email</th>
-    <th>RoomID</th>
-    <th>Room-Type</th>
-    <th>Check-In</th>
-    <th>Check-Out</th>
-    
-    <th>Status</th>
-    <th>Actions</th>
-</tr>
+            <label>Room Type:</label>
+            <select name="roomType" required>
+                <option value="STANDARD">STANDARD</option>
+                <option value="DELUXE">DELUXE</option>
+                <option value="SUITE">SUITE</option>
+            </select>
 
-<% for (Reservation r : list) { %>
-<tr>
-    <td><%= r.getReservationId() %></td>
-    <td><%= r.getCustomerName() %></td>
-    <td><%= r.getCustomerPhone() %></td>
-    <td><%= r.getCustomerEmail() %></td>
-    <td><%= r.getRoomId() %></td>
-    
-    <td><%= r.getCheckIn() %></td>
-    <td><%= r.getCheckOut() %></td>
-    
-    <td><%= r.getStatus() %></td>
-    <td>
+            <label>Check In:</label>
+            <input type="date" name="checkIn" required/>
 
-        <!-- EDIT -->
-        <form method="post"
-              action="${pageContext.request.contextPath}/staff/reservations"
-              style="display:inline;">
-            <input type="hidden" name="action" value="update">
-            <input type="hidden" name="id" value="<%= r.getReservationId() %>">
+            <label>Check Out:</label>
+            <input type="date" name="checkOut" required/>
 
-            <input type="hidden" name="name" value="<%= r.getCustomerName() %>">
-            <input type="hidden" name="phone" value="<%= r.getCustomerPhone() %>">
-            <input type="hidden" name="email" value="<%= r.getCustomerEmail() %>">
-            <input type="hidden" name="roomId" value="<%= r.getRoomId() %>">
-            <input type="hidden" name="checkIn" value="<%= r.getCheckIn() %>">
-            <input type="hidden" name="checkOut" value="<%= r.getCheckOut() %>">
-            
-            <input type="hidden" name="status" value="CONFIRMED">
-
-            <button class="edit-btn">Quick Confirm</button>
+            <br><br>
+            <button type="submit" class="btn btn-save">
+                Save Reservation
+            </button>
         </form>
+    </div>
 
-        <!-- DELETE -->
-        <form method="post"
-              action="${pageContext.request.contextPath}/staff/reservations"
-              style="display:inline;"
-              onsubmit="return confirm('Delete this reservation?');">
+    <!-- ================= RESERVATION LIST ================= -->
+    <div class="table-section">
+        <h3>Reservation List</h3>
 
-            <input type="hidden" name="action" value="delete">
-            <input type="hidden" name="id" value="<%= r.getReservationId() %>">
-            <input type="hidden" name="roomId" value="<%= r.getRoomId() %>">
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Room ID</th>
+                <th>Room Type</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
 
-            <button class="delete-btn">Delete</button>
-        </form>
 
-    </td>
-</tr>
-<% } %>
+<c:forEach var="r" items="${reservations}">
+                <tr>
+                    <td>${r.reservationId}</td>                                   
+                    <td>${r.customerName}</td>
+                    <td>${r.roomId}</td>
+                    <td>${r.roomType}</td>
+                    <td>${r.checkIn}</td>
+                    <td>${r.checkOut}</td>
+                    <td>${r.status}</td>
+                    <td>
 
-</table>
+                        <c:if test="${r.status != 'CANCELLED'}">
+                            <a class="btn btn-cancel"
+                               href="${pageContext.request.contextPath}/staff/reservations?action=cancel&id=${r.reservationId}&roomId=${r.roomId}">
+                                Cancel
+                            </a>
+                        </c:if>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
 
 </div>
 

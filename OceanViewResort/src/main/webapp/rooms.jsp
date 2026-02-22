@@ -21,7 +21,10 @@ button { padding:6px 12px; cursor:pointer; }
 .add-btn { background:#28a745; color:white; border:none; }
 .update-btn { background:#007bff; color:white; border:none; }
 .delete-btn { background:#dc3545; color:white; border:none; }
+
+
 </style>
+
 </head>
 <body>
 
