@@ -37,6 +37,7 @@
         }
         .btn-save { background: green; }
         .btn-cancel { background: red; }
+        .btn-view-bill{ background:  #007bff; }
     </style>
 </head>
 
@@ -123,6 +124,10 @@
                                href="${pageContext.request.contextPath}/staff/reservations?action=cancel&id=${r.reservationId}&roomId=${r.roomId}">
                                 Cancel
                             </a>
+                            <a class="btn btn-view_bill"
+   href="${pageContext.request.contextPath}/staff/bills?action=view&reservationId=${r.reservationId}">
+   View Bill
+</a>
                         </c:if>
                     </td>
                 </tr>

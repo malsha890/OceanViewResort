@@ -103,4 +103,33 @@ public class ReservationDAO {
 
         return list;
     }
+
+    public Reservation getReservationById(int id) {
+
+        Reservation r = null;
+
+        try (Connection con = DBConnection.getConnection()) {
+
+            String sql = "SELECT * FROM reservations WHERE reservation_id=?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                r = new Reservation();
+                r.setReservationId(rs.getInt("reservation_id"));
+                r.setCustomerName(rs.getString("customer_name"));
+                r.setRoomId(rs.getInt("room_id"));
+                r.setRoomType(rs.getString("room_type"));
+                r.setCheckIn(rs.getDate("check_in").toLocalDate());
+                r.setCheckOut(rs.getDate("check_out").toLocalDate());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return r;
+    }
 }

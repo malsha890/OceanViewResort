@@ -1,5 +1,6 @@
 package com.oceanview.dao;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
@@ -134,5 +135,28 @@ public class RoomDAO {
 
         return rs.getInt(1) == 0;
     }
+        
 }
+    public BigDecimal getRoomPriceById(int roomId) {
+
+        BigDecimal price = BigDecimal.ZERO;
+
+        try (Connection con = DBConnection.getConnection()) {
+
+            String sql = "SELECT price_per_night FROM rooms WHERE room_id=?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, roomId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                price = rs.getBigDecimal("price_per_night");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return price;
+    }
 }
