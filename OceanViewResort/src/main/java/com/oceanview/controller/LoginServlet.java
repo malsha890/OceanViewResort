@@ -18,9 +18,8 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         try {
-            StaffDAO dao = new StaffDAO();   // create object
-            Staff staff = dao.login(email, password);  // call properly
-
+            StaffDAO dao = new StaffDAO();   
+            Staff staff = dao.login(email, password);  
             if (staff != null) {
 
                 HttpSession session = request.getSession();
@@ -38,8 +37,8 @@ public class LoginServlet extends HttpServlet {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();  // Keep this
-            request.setAttribute("error", e.getMessage());  // Show real error
+            e.printStackTrace();  
+            request.setAttribute("error", e.getMessage());  
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
 
