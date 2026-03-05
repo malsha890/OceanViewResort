@@ -14,14 +14,14 @@ public class BillDAO {
     private ReservationDAO reservationDAO = new ReservationDAO();
     private RoomDAO roomDAO = new RoomDAO();
 
-    // ==========================================
+   
     // CREATE BILL
-    // ==========================================
+  
     public void createBill(int reservationId) {
 
         try (Connection con = DBConnection.getConnection()) {
 
-            // 1️⃣ Get reservation details
+            //  Get reservation details
             Reservation reservation = reservationDAO.getReservationById(reservationId);
 
             if (reservation == null) {
@@ -29,7 +29,7 @@ public class BillDAO {
                 return;
             }
 
-            // 2️⃣ Calculate number of days
+            // Calculate number of days
             long days = ChronoUnit.DAYS.between(
                     reservation.getCheckIn(),
                     reservation.getCheckOut());
@@ -38,10 +38,10 @@ public class BillDAO {
                 days = 1;
             }
 
-            // 3️⃣ Get room rate from DB
+            //  Get room rate from DB
             BigDecimal roomRate = roomDAO.getRoomPriceById(reservation.getRoomId());
 
-            // 4️⃣ Calculate charges
+            //  Calculate charges
             BigDecimal roomCharge = roomRate.multiply(BigDecimal.valueOf(days));
 
             BigDecimal tax = roomCharge
@@ -57,7 +57,7 @@ public class BillDAO {
                     .add(serviceCharge)
                     .setScale(2, RoundingMode.HALF_UP);
 
-            // 5️⃣ Insert into database
+            // Insert into database
             String sql = "INSERT INTO bills " +
                     "(reservation_id, issue_date, room_charge, tax, service_charge, total_amount, status) " +
                     "VALUES (?, CURDATE(), ?, ?, ?, ?, 'UNPAID')";
@@ -78,9 +78,9 @@ public class BillDAO {
         }
     }
 
-    // ==========================================
+    
     // GET BILL BY RESERVATION
-    // ==========================================
+
     public Bill getBillByReservation(int reservationId) {
 
         Bill bill = null;
@@ -113,9 +113,9 @@ public class BillDAO {
         return bill;
     }
 
-    // ==========================================
+    
     // MARK BILL AS PAID
-    // ==========================================
+    
     public void markAsPaid(int billId) {
 
         try (Connection con = DBConnection.getConnection()) {
