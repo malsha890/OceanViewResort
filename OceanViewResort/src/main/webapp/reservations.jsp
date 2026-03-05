@@ -47,7 +47,6 @@
 
     <h2>Reservation Management</h2>
 
-    <!-- ================= ADD RESERVATION FORM ================= -->
     <div class="form-section">
         <h3>Add Reservation</h3>
 
@@ -91,7 +90,7 @@
         </form>
     </div>
 
-    <!-- ================= RESERVATION LIST ================= -->
+   
     <div class="table-section">
         <h3>Reservation List</h3>
 
