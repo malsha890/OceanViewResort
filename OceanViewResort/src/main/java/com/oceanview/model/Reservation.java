@@ -17,9 +17,9 @@ public class Reservation {
     private String roomType;
     private String customerAddress;
 
-    // =========================
-    // Constructors
-    // =========================
+   
+    
+    
 
     public Reservation() {
     }
@@ -41,9 +41,9 @@ public class Reservation {
         this.customerAddress = customerAddress;
     }
 
-    // =========================
-    // Getters and Setters
-    // =========================
+ 
+    
+    
 
     public int getReservationId() {
         return reservationId;
