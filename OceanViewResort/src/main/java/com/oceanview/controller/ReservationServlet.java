@@ -60,9 +60,9 @@ addReservation(request, response);
 response.sendRedirect(request.getContextPath() + "/staff/reservations?action=list");
 }
 }
-    // ==============================
+    
     // LIST
-    // ==============================
+    
     private void listReservations(HttpServletRequest request,
                                   HttpServletResponse response)
             throws ServletException, IOException {
@@ -74,9 +74,8 @@ response.sendRedirect(request.getContextPath() + "/staff/reservations?action=lis
                 .forward(request, response);
     }
 
-    // ==============================
     // ADD
-    // ==============================
+  
     private void addReservation(HttpServletRequest request,
                                 HttpServletResponse response)
             throws IOException {
@@ -97,9 +96,9 @@ response.sendRedirect(request.getContextPath() + "/staff/reservations?action=lis
         response.sendRedirect(request.getContextPath() + "/staff/reservations?action=list");
     }
 
-    // ==============================
+    
     // CANCEL
-    // ==============================
+    
     private void cancelReservation(HttpServletRequest request,
                                    HttpServletResponse response)
             throws IOException {
