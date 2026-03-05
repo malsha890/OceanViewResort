@@ -8,9 +8,9 @@ import java.util.*;
 import java.sql.Date;
 public class ReservationDAO {
 
-    RoomDAO roomDAO = new RoomDAO(); // ✅ FIXED
+    RoomDAO roomDAO = new RoomDAO(); 
 
-    // ✅ ADD RESERVATION
+    // ADD RESERVATION
     public void addReservation(Reservation r) {
 
         String sql = "INSERT INTO reservations " +
@@ -33,7 +33,7 @@ public class ReservationDAO {
 
             ps.executeUpdate();
 
-            // 🔥 Update Room
+            // Update Room
             roomDAO.updateRoomStatus(r.getRoomId(), "BOOKED");
             
         } catch (Exception e) {
@@ -43,7 +43,7 @@ public class ReservationDAO {
         System.out.println("DB Connected");
     }
 
-    // ✅ CANCEL
+    // CANCEL
     public void cancelReservation(int reservationId, int roomId) {
 
         String sql = "UPDATE reservations SET status='CANCELLED' WHERE reservation_id=?";
@@ -61,7 +61,7 @@ public class ReservationDAO {
         }
     }
 
-    // ✅ GET ALL
+    //  GET ALL
     public List<Reservation> getAllReservations() {
 
         List<Reservation> list = new ArrayList<>();
