@@ -191,14 +191,14 @@ body {
     
     <a href="${pageContext.request.contextPath}/staff/rooms">Manage Rooms</a>
     <a href="${pageContext.request.contextPath}/staff/reservations">Manage Reservations</a>
-    <a href="${pageContext.request.contextPath}/staff/billing">Calculate & Print Bill</a>
+    <a href="${pageContext.request.contextPath}/staff/bills">Calculate & Print Bill</a>
     
     
     <!-- Help Section -->
     <a href="${pageContext.request.contextPath}/staff/help">Help</a>
 
     <!-- Exit Section -->
-    <form action="${pageContext.request.contextPath}/exit" method="post">
+    <form action="${pageContext.request.contextPath}/logout" method="post">
         <button type="submit" class="sidebar-btn">Exit</button>
     </form>
 </div>

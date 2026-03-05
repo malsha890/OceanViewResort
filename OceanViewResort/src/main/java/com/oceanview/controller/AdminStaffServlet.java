@@ -46,13 +46,13 @@ public class AdminStaffServlet extends HttpServlet {
             }
 
             request.setAttribute("staffList", staffList);
-            request.getRequestDispatcher("/AdminDashboard.jsp")
+            request.getRequestDispatcher("/staffManagement.jsp")
                    .forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", e.getMessage());
-            request.getRequestDispatcher("/AdminDashboard.jsp")
+            request.getRequestDispatcher("/staffManagement.jsp")
                    .forward(request, response);
         }
     }
@@ -66,23 +66,34 @@ public class AdminStaffServlet extends HttpServlet {
 
             if ("add".equals(action)) {
 
-                Staff staff = new Staff();
-                staff.setFullName(request.getParameter("fullName"));
-                staff.setEmail(request.getParameter("email"));
-                if ("add".equals(action)) {
+                String fullName = request.getParameter("fullName");
+                String email = request.getParameter("email");
+                String rawPassword = request.getParameter("password");
+                String role = request.getParameter("role");
 
-                    
+                //  PASSWORD VALIDATION HERE
+                if (!rawPassword.matches("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}")) {
 
-                    String rawPassword = request.getParameter("password");
-                    String hashedPassword = PasswordUtil.hashPassword(rawPassword);
+                    request.setAttribute("error",
+                            "Password must contain at least 8 characters, including uppercase, lowercase, number and special character.");
 
-                    staff.setPassword(hashedPassword);
-                    staff.setRole(request.getParameter("role"));
+                    // reload staff list before forwarding
+                    List<Staff> staffList = staffDAO.getAllStaff();
+                    request.setAttribute("staffList", staffList);
 
-                    staffDAO.addStaff(staff);
+                    request.getRequestDispatcher("/staffManagement.jsp")
+                           .forward(request, response);
+                    return;
                 }
 
-                staff.setRole(request.getParameter("role"));
+                // If password valid → hash it
+                String hashedPassword = PasswordUtil.hashPassword(rawPassword);
+
+                Staff staff = new Staff();
+                staff.setFullName(fullName);
+                staff.setEmail(email);
+                staff.setPassword(hashedPassword);
+                staff.setRole(role);
 
                 staffDAO.addStaff(staff);
 

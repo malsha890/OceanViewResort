@@ -19,8 +19,19 @@ public class AuthFilter implements Filter {
 
         String path = req.getRequestURI();
 
-        // Allow login page and resources
-        if (path.endsWith("login.jsp") || path.endsWith("login")) {
+        // Allow public pages & static resources
+        if (path.contains("login.jsp") ||
+            path.contains("login") ||
+            path.contains("/images/") ||
+            path.contains("/css/") ||
+            path.contains("/js/") ||
+            path.endsWith(".png") ||
+            path.endsWith(".jpg") ||
+            path.endsWith(".jpeg") ||
+            path.endsWith(".gif") ||
+            path.endsWith(".css") ||
+            path.endsWith(".js")) {
+
             chain.doFilter(request, response);
             return;
         }
@@ -35,12 +46,12 @@ public class AuthFilter implements Filter {
         Staff staff = (Staff) session.getAttribute("staff");
 
         // Role Protection
-        if (path.contains("adminDashboard") && 
-            !staff.getRole().equals("ADMIN")) {
-            res.sendRedirect("staffDashboard.jsp");
+        if (path.contains("adminDashboard") &&
+                !staff.getRole().equals("ADMIN")) {
+            res.sendRedirect(req.getContextPath() + "/adminDashboard.jsp");
             return;
         }
-        
+
         chain.doFilter(request, response);
     }
 }

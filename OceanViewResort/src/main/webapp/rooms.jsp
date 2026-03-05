@@ -7,6 +7,12 @@ if (list == null) {
     list = new ArrayList<>();
 }
 %>
+<%@ page import="java.text.DecimalFormat" %>
+
+<%
+DecimalFormat df = new DecimalFormat("#,###.00");
+%>
+
 
 <!DOCTYPE html>
 <html>
@@ -26,36 +32,59 @@ button { padding:6px 12px; cursor:pointer; }
 </style>
 
 </head>
+
 <body>
 
 <div class="card">
 <h2>Room Management</h2>
 
 <form action="${pageContext.request.contextPath}/staff/rooms" method="post">
-    Room Number: <input type="text" name="roomNumber" required>
-    
+
+    <!-- Hidden fields -->
+    <input type="hidden" name="action" value="add" id="formAction">
+    <input type="hidden" name="id" id="roomId">
+
+    Room Number:
+    <input type="text" name="roomNumber" id="roomNumber">
+
     Type:
-    <select name="roomType">
+    <select name="roomType" id="roomType">
         <option value="STANDARD">STANDARD</option>
-        <option value="DELUXE">DELUXE</option>
         <option value="SUITE">SUITE</option>
     </select>
-    
-    Price: <input type="number" step="0.01" name="price" required>
-    
-    Capacity: <input type="number" name="capacity" required>
-    
-    <input type="hidden" name="status" value="AVAILABLE">
-    
-    <button type="submit" name="action" value="add" class="add-btn">
-        Add Room
-    </button>
+
+    Price:
+    <input type="number" name="price" id="price">
+
+    Capacity:
+    <input type="number" name="capacity" id="capacity">
+
+    Status:
+    <select name="status" id="status">
+        <option value="ACTIVE">ACTIVE</option>
+        <option value="MAINTENANCE">MAINTENANCE</option>
+        <option value="INACTIVE">INACTIVE</option>
+    </select>
+
+    <button type="submit" id="submitBtn">Add Room</button>
 </form>
 </div>
 
 <div class="card">
 <h3>Room List</h3>
+<form action="${pageContext.request.contextPath}/staff/rooms" method="get" style="margin-bottom:15px;">
 
+    <input type="hidden" name="action" value="search">
+
+    <input type="text" name="keyword" placeholder="Search by number, type or status">
+
+    <button type="submit">Search</button>
+
+    <a href="${pageContext.request.contextPath}/staff/rooms">
+        <button type="button">Reset</button>
+    </a>
+
+</form>
 <table>
 <tr>
     <th>ID</th>
@@ -72,27 +101,27 @@ button { padding:6px 12px; cursor:pointer; }
     <td><%= r.getRoomId() %></td>
     <td><%= r.getRoomNumber() %></td>
     <td><%= r.getRoomType() %></td>
-    <td>$<%= r.getPricePerNight() %></td>
+    <td>Rs.<%= r.getPricePerNight() %></td>
     <td><%= r.getCapacity() %></td>
     <td><%= r.getStatus() %></td>
     <td>
 
         <!-- UPDATE -->
-        <form action="${pageContext.request.contextPath}/staff/rooms" 
-              method="post" style="display:inline;">
-              
-            <input type="hidden" name="id" value="<%= r.getRoomId() %>">
-            <input type="hidden" name="roomNumber" value="<%= r.getRoomNumber() %>">
-            <input type="hidden" name="roomType" value="<%= r.getRoomType() %>">
-            <input type="hidden" name="price" value="<%= r.getPricePerNight() %>">
-            <input type="hidden" name="capacity" value="<%= r.getCapacity() %>">
-            <input type="hidden" name="status" value="AVAILABLE">
+      
 
-            <button type="submit" name="action" value="update" 
-                    class="update-btn">
-                Update
-            </button>
-        </form>
+         <button type="button"
+    onclick="editRoom(
+        '<%= r.getRoomId() %>',
+        '<%= r.getRoomNumber() %>',
+        '<%= r.getRoomType() %>',
+        '<%= r.getPricePerNight() %>',
+        '<%= r.getCapacity() %>',
+        '<%= r.getStatus() %>'
+    )"
+    class="update-btn">
+    Update
+</button>
+        
 
         <!-- DELETE -->
         <form action="${pageContext.request.contextPath}/staff/rooms" 
@@ -113,6 +142,25 @@ button { padding:6px 12px; cursor:pointer; }
 
 </table>
 </div>
+<script>
+function editRoom(id, number, type, price, capacity, status) {
 
+    document.getElementById("roomId").value = id;
+    document.getElementById("roomNumber").value = number;
+    document.getElementById("roomType").value = type;
+    document.getElementById("price").value = price;
+    document.getElementById("capacity").value = capacity;
+    document.getElementById("status").value = status;
+
+    // Change form mode to UPDATE
+    document.getElementById("formAction").value = "update";
+
+    // Change button text
+    document.getElementById("submitBtn").innerText = "Update Room";
+
+    // Scroll to top
+    window.scrollTo(0, 0);
+}
+</script>
 </body>
 </html>

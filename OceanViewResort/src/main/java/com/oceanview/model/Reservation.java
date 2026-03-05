@@ -1,5 +1,6 @@
 package com.oceanview.model;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -89,16 +90,16 @@ public class Reservation {
         return checkIn;
     }
 
-    public void setCheckIn(LocalDate checkIn) {
-        this.checkIn = checkIn;
+    public void setCheckIn(LocalDate date) {
+        this.checkIn = date;
     }
 
     public LocalDate getCheckOut() {
         return checkOut;
     }
 
-    public void setCheckOut(LocalDate checkOut) {
-        this.checkOut = checkOut;
+    public void setCheckOut(LocalDate date) {
+        this.checkOut = date;
     }
 
     public String getStatus() {
@@ -132,4 +133,11 @@ public class Reservation {
     public void setCustomerAddress(String customerAddress) {
         this.customerAddress = customerAddress;
     }
+
+	public void setTotalAmount(double double1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
 }

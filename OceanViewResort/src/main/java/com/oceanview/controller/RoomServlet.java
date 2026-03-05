@@ -21,30 +21,32 @@ import com.oceanview.util.DBConnection;
 public class RoomServlet extends HttpServlet {
 	
 
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
-            throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request,
+            HttpServletResponse response)
+throws ServletException, IOException {
 
-        String action = request.getParameter("action");
+String action = request.getParameter("action");
 
-        try (Connection con = DBConnection.getConnection()) {
+try (Connection con = DBConnection.getConnection()) {
 
-            RoomDAO dao = new RoomDAO();
+RoomDAO dao = new RoomDAO();
 
-            if ("search".equals(action)) {
-                String keyword = request.getParameter("keyword");
-                request.setAttribute("list", dao.searchRoom(keyword));
-            } else {
-                request.setAttribute("list", dao.getAllRooms());
-            }
+if ("search".equals(action)) {
+   String keyword = request.getParameter("keyword");
+   request.setAttribute("list", dao.searchRoom(keyword));
+} else {
+   request.setAttribute("list", dao.getAllRooms());
+}
 
-            request.getRequestDispatcher("/rooms.jsp")
-                   .forward(request, response);
+request.getRequestDispatcher("/rooms.jsp")
+      .forward(request, response);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
+} catch (Exception e) {
+e.printStackTrace();
+}
+}
+
 
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)

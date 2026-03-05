@@ -85,22 +85,22 @@
         <table>
             <tr>
                 <td><b>Room Charge</b></td>
-                <td>${bill.roomCharge}</td>
+                <td>Rs.${bill.roomCharge}</td>
             </tr>
 
             <tr>
                 <td><b>Service Charge (10%)</b></td>
-                <td>${bill.serviceCharge}</td>
+                <td>Rs.${bill.serviceCharge}</td>
             </tr>
 
             <tr>
                 <td><b>Tax (5%)</b></td>
-                <td>${bill.tax}</td>
+                <td>Rs.${bill.tax}</td>
             </tr>
 
             <tr class="total-row">
                 <td><b>Total Amount</b></td>
-                <td><b>${bill.totalAmount}</b></td>
+                <td><b>Rs.${bill.totalAmount}</b></td>
             </tr>
 
             <tr>

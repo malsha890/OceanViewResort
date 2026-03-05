@@ -18,8 +18,8 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         try {
-            StaffDAO dao = new StaffDAO();   // create object
-            Staff staff = dao.login(email, password);  // call properly
+            StaffDAO dao = new StaffDAO();   
+            Staff staff = dao.login(email, password);  
 
             if (staff != null) {
 
@@ -27,9 +27,9 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("staff", staff);
 
                 if ("ADMIN".equals(staff.getRole())) {
-                    response.sendRedirect("admin/staff");
+                	 response.sendRedirect(request.getContextPath() + "/admin/dashboard");
                 } else {
-                    response.sendRedirect("StaffDashboard.jsp");
+                	response.sendRedirect(request.getContextPath() + "/staff/dashboard");
                 }
 
             } else {
@@ -38,8 +38,8 @@ public class LoginServlet extends HttpServlet {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();  // Keep this
-            request.setAttribute("error", e.getMessage());  // Show real error
+            e.printStackTrace();  
+            request.setAttribute("error", e.getMessage());  
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
 

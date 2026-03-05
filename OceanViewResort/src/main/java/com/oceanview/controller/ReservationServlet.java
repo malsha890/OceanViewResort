@@ -1,114 +1,111 @@
-package com.oceanview.controller;
-
+package com.oceanview.controller; 
 import com.oceanview.dao.ReservationDAO;
+ 
 import com.oceanview.model.Reservation;
+import com.oceanview.util.EmailUtil;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.List;
+import javax.servlet.ServletException; 
+import javax.servlet.annotation.WebServlet; 
+import javax.servlet.http.*; 
+import java.io.IOException; 
+import java.time.LocalDate; 
+import java.util.List; 
 
-@WebServlet("/staff/reservations")
-public class ReservationServlet extends HttpServlet {
+@WebServlet("/staff/reservations") 
+public class ReservationServlet extends HttpServlet { ReservationDAO reservationDAO = new ReservationDAO(); 
+@Override protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { String action = request.getParameter("action"); 
+if (action == null) { action = "list"; }
+switch (action) { case "list": listReservations(request, response); 
+break; case "cancel": cancelReservation(request, response); 
+break; case "addForm": request.getRequestDispatcher("/reservations.jsp") .forward(request, response); 
+break; default: listReservations(request, response); break; } } 
+@Override protected void doPost
+(HttpServletRequest request, HttpServletResponse response) 
+		throws ServletException, IOException { String action = request.getParameter("action");
+		if ("add".equals(action)) { addReservation(request, response); } 
+		else { response.sendRedirect(request.getContextPath() + "/staff/reservations?action=list"); } } 
+// ============================== // LIST // ============================== 
+private void listReservations(HttpServletRequest request, 
+		HttpServletResponse response) throws ServletException,
+IOException { List<Reservation> list = reservationDAO.getAllReservations(); 
+request.setAttribute("reservations", list);
+request.getRequestDispatcher("/reservations.jsp") .forward(request, response); }
+// ============================== // ADD // ============================== 
+private void addReservation(HttpServletRequest request,
+        HttpServletResponse response)
+throws IOException, ServletException {
 
-    ReservationDAO reservationDAO = new ReservationDAO();
+try {
 
-    @Override
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
-            throws ServletException, IOException {
+String name = request.getParameter("name");
+String phone = request.getParameter("phone");
+String email = request.getParameter("email");
+int roomId = Integer.parseInt(request.getParameter("roomId"));
 
-        String action = request.getParameter("action");
+LocalDate checkIn =
+LocalDate.parse(request.getParameter("checkIn"));
+LocalDate checkOut =
+LocalDate.parse(request.getParameter("checkOut"));
 
-        if (action == null) {
-            action = "list";
-        }
+String roomType = request.getParameter("roomType");
+String address = request.getParameter("address");
 
-        switch (action) {
+// ✅ STEP 2A — DATE VALIDATION
+if (!checkOut.isAfter(checkIn)) {
 
-            case "list":
-                listReservations(request, response);
-                break;
+request.setAttribute("error",
+"Check-out must be after check-in date.");
 
-            case "cancel":
-                cancelReservation(request, response);
-                break;
+listReservations(request, response);
+return;
+}
 
-            case "addForm":
-                request.getRequestDispatcher("/reservations.jsp")
-                        .forward(request, response);
-                break;
+// ✅ STEP 2B — OVERLAP VALIDATION
+boolean available =
+reservationDAO.isRoomAvailable(roomId, checkIn, checkOut);
 
-            default:
-                listReservations(request, response);
-                break;
-        }
-    }
+if (!available) {
 
-    @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response)
-throws ServletException, IOException {
+request.setAttribute("error",
+"This room is already booked for selected dates.");
 
-String action = request.getParameter("action");
+listReservations(request, response);
+return;
+}
 
-if ("add".equals(action)) {
-addReservation(request, response);
-} else {
-response.sendRedirect(request.getContextPath() + "/staff/reservations?action=list");
+// ✅ STEP 2C — SAVE IF VALID
+Reservation r = new Reservation();
+r.setCustomerName(name);
+r.setCustomerPhone(phone);
+r.setCustomerEmail(email);
+r.setRoomId(roomId);
+r.setCheckIn(checkIn);
+r.setCheckOut(checkOut);
+r.setRoomType(roomType);
+r.setCustomerAddress(address);
+
+reservationDAO.addReservation(r);
+EmailUtil.sendReservationEmail(
+        r.getCustomerEmail(),
+        r.getCustomerName(),
+        r.getRoomType(),
+        r.getCheckIn().toString(),
+        r.getCheckOut().toString()
+);
+response.sendRedirect(request.getContextPath()
++ "/staff/reservations?action=list");
+
+} catch (Exception e) {
+e.printStackTrace();
+request.setAttribute("error", e.getMessage());
+listReservations(request, response);
 }
 }
-    // ==============================
-    // LIST
-    // ==============================
-    private void listReservations(HttpServletRequest request,
-                                  HttpServletResponse response)
-            throws ServletException, IOException {
-
-        List<Reservation> list = reservationDAO.getAllReservations();
-        request.setAttribute("reservations", list);
-
-        request.getRequestDispatcher("/reservations.jsp")
-                .forward(request, response);
-    }
-
-    // ==============================
-    // ADD
-    // ==============================
-    private void addReservation(HttpServletRequest request,
-                                HttpServletResponse response)
-            throws IOException {
-
-        Reservation r = new Reservation();
-
-        r.setCustomerName(request.getParameter("name"));
-        r.setCustomerPhone(request.getParameter("phone"));
-        r.setCustomerEmail(request.getParameter("email"));
-        r.setRoomId(Integer.parseInt(request.getParameter("roomId")));
-        r.setCheckIn(LocalDate.parse(request.getParameter("checkIn")));
-        r.setCheckOut(LocalDate.parse(request.getParameter("checkOut")));
-        r.setRoomType(request.getParameter("roomType"));
-        r.setCustomerAddress(request.getParameter("address"));
-
-        reservationDAO.addReservation(r);
-
-        response.sendRedirect(request.getContextPath() + "/staff/reservations?action=list");
-    }
-
-    // ==============================
-    // CANCEL
-    // ==============================
-    private void cancelReservation(HttpServletRequest request,
-                                   HttpServletResponse response)
-            throws IOException {
-
-        int reservationId = Integer.parseInt(request.getParameter("id"));
-        int roomId = Integer.parseInt(request.getParameter("roomId"));
-
-        reservationDAO.cancelReservation(reservationId, roomId);
-
-        response.sendRedirect(request.getContextPath() + "/staff/reservations?action=list");
-    }
+// ============================== // CANCEL // ============================== 
+private void cancelReservation(HttpServletRequest request, HttpServletResponse response) 
+		throws IOException { int reservationId = Integer.parseInt(request.getParameter("id")); 
+		int roomId = Integer.parseInt(request.getParameter("roomId")); 
+		reservationDAO.cancelReservation(reservationId, roomId);
+		response.sendRedirect(request.getContextPath() + "/staff/reservations?action=list"); } 
 }
+

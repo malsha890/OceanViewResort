@@ -2,6 +2,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.oceanview.model.Reservation" %>
+<% if (request.getAttribute("error") != null) { %>
+    <p style="color:red;">
+        <%= request.getAttribute("error") %>
+    </p>
+<% } %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,14 +35,14 @@
         }
         table th { background: #007bff; color: white; }
         .btn {
-            padding: 6px 12px;
+            padding: 6px 10px;
             text-decoration: none;
             border-radius: 4px;
             color: white;
         }
         .btn-save { background: green; }
         .btn-cancel { background: red; }
-        .btn-view-bill{ background:  #007bff; }
+        .btn-view_bill{ background:  #007bff; }
     </style>
 </head>
 

@@ -11,8 +11,12 @@ public class RoomDAO {
 
 	
 
-	 public RoomDAO() {
-	    }
+	private Connection con;
+
+    public RoomDAO(Connection conn) {
+        this.con = conn;}
+ public RoomDAO() {
+    }
 
 
 
@@ -65,7 +69,7 @@ public class RoomDAO {
         ps.executeUpdate();
     }
     }
-    // ❌ Prevent deleting BOOKED room
+    //  Prevent deleting BOOKED room
     public boolean deleteRoom(int id) throws Exception {
 
         String check = "SELECT status FROM rooms WHERE room_id=?";
@@ -87,7 +91,7 @@ public class RoomDAO {
         return true;
     }
     }
-    // 🔄 Auto update room status
+    //  Auto update room status
     public void updateRoomStatus(int roomId, String status) throws Exception {
         String sql = "UPDATE rooms SET status=? WHERE room_id=?";
         try (Connection con = DBConnection.getConnection();
@@ -99,25 +103,40 @@ public class RoomDAO {
     }
     // Search
     public List<Room> searchRoom(String keyword) throws Exception {
-        List<Room> list = new ArrayList<>();
-        String sql = "SELECT * FROM rooms WHERE room_number LIKE ?";
-        try (Connection con = DBConnection.getConnection();
-        PreparedStatement ps = con.prepareStatement(sql)){
-        ps.setString(1, "%" + keyword + "%");
-        ResultSet rs = ps.executeQuery();
 
-        while (rs.next()) {
-            Room r = new Room();
-            r.setRoomId(rs.getInt("room_id"));
-            r.setRoomNumber(rs.getString("room_number"));
-            r.setRoomType(rs.getString("room_type"));
-            r.setPricePerNight(rs.getDouble("price_per_night"));
-            r.setCapacity(rs.getInt("capacity"));
-            r.setStatus(rs.getString("status"));
-            list.add(r);
+        List<Room> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM rooms WHERE " +
+                     "room_number LIKE ? OR " +
+                     "room_type LIKE ? OR " +
+                     "status LIKE ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            String searchKeyword = "%" + keyword + "%";
+
+            ps.setString(1, searchKeyword);
+            ps.setString(2, searchKeyword);
+            ps.setString(3, searchKeyword);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                Room r = new Room();
+                r.setRoomId(rs.getInt("room_id"));
+                r.setRoomNumber(rs.getString("room_number"));
+                r.setRoomType(rs.getString("room_type"));
+                r.setPricePerNight(rs.getDouble("price_per_night"));
+                r.setCapacity(rs.getInt("capacity"));
+                r.setStatus(rs.getString("status"));
+
+                list.add(r);
+            }
         }
+
         return list;
-    }
     }
     public boolean isRoomAvailable(int roomId, Date checkIn, Date checkOut) throws Exception {
 
@@ -159,4 +178,5 @@ public class RoomDAO {
 
         return price;
     }
-}
+   
+    }
