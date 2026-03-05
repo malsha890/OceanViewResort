@@ -65,7 +65,7 @@ public class RoomDAO {
         ps.executeUpdate();
     }
     }
-    // ❌ Prevent deleting BOOKED room
+    //  Prevent deleting BOOKED room
     public boolean deleteRoom(int id) throws Exception {
 
         String check = "SELECT status FROM rooms WHERE room_id=?";
@@ -87,7 +87,7 @@ public class RoomDAO {
         return true;
     }
     }
-    // 🔄 Auto update room status
+    // Auto update room status
     public void updateRoomStatus(int roomId, String status) throws Exception {
         String sql = "UPDATE rooms SET status=? WHERE room_id=?";
         try (Connection con = DBConnection.getConnection();
@@ -119,6 +119,7 @@ public class RoomDAO {
         return list;
     }
     }
+	//prevent booking overlapping 
     public boolean isRoomAvailable(int roomId, Date checkIn, Date checkOut) throws Exception {
 
         String sql = "SELECT COUNT(*) FROM reservations WHERE room_id=? " +
@@ -137,6 +138,7 @@ public class RoomDAO {
     }
         
 }
+	//calculate bill
     public BigDecimal getRoomPriceById(int roomId) {
 
         BigDecimal price = BigDecimal.ZERO;
