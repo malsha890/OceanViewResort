@@ -27,7 +27,6 @@
 <html>
 <head>
 <title>Staff Dashboard</title>
-
 <style>
 body {
     margin: 0;
@@ -191,7 +190,7 @@ body {
     
     <a href="${pageContext.request.contextPath}/staff/rooms">Manage Rooms</a>
     <a href="${pageContext.request.contextPath}/staff/reservations">Manage Reservations</a>
-    <a href="${pageContext.request.contextPath}/staff/bills">Calculate & Print Bill</a>
+    <a href="${pageContext.request.contextPath}/staff/reservations">Calculate & Print Bill</a>
     
     
     <!-- Help Section -->

@@ -178,5 +178,25 @@ public class RoomDAO {
 
         return price;
     }
+ // Get Room By ID
+    public Room getRoomById(int roomId) throws Exception {
+        Room r = null;
+        String sql = "SELECT * FROM rooms WHERE room_id = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, roomId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                r = new Room();
+                r.setRoomId(rs.getInt("room_id"));
+                r.setRoomNumber(rs.getString("room_number"));
+                r.setRoomType(rs.getString("room_type"));
+                r.setPricePerNight(rs.getDouble("price_per_night"));
+                r.setCapacity(rs.getInt("capacity"));
+                r.setStatus(rs.getString("status"));
+            }
+            return r; // returns null if not found
+        }
+    }
    
     }

@@ -11,7 +11,7 @@
 <head>
     <title>Bill - OceanView Resort</title>
 
-    <style>
+   <style>
         body {
             font-family: Arial;
             margin: 30px;

@@ -9,6 +9,149 @@
 <html>
 <head>
 <title>Admin Dashboard</title>
+<style>
+
+/* PAGE STYLE */
+
+body{
+font-family: Arial, sans-serif;
+background:#f2f8ff;
+margin:30px;
+color:#333;
+}
+
+/* HEADINGS */
+
+h2{
+color:#0077cc;
+}
+
+h3{
+color:#444;
+margin-top:30px;
+}
+
+/* SEARCH BAR */
+
+.search-box{
+margin-bottom:20px;
+}
+
+.search-box input{
+padding:8px;
+width:220px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+.search-box button{
+padding:8px 15px;
+background:#4fc3f7;
+border:none;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+.search-box button:hover{
+background:#039be5;
+}
+
+/* FORM */
+
+input, select{
+padding:8px;
+width:220px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+button{
+padding:8px 15px;
+background:#4fc3f7;
+border:none;
+color:white;
+border-radius:5px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#039be5;
+}
+
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+background:white;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
+}
+
+th{
+background:#4fc3f7;
+color:white;
+padding:12px;
+}
+
+td{
+padding:10px;
+border-bottom:1px solid #ddd;
+}
+
+tr:hover{
+background:#f1faff;
+}
+
+/* EDIT BUTTON */
+
+.edit-btn{
+background:#42a5f5;
+}
+
+.edit-btn:hover{
+background:#1e88e5;
+}
+
+/* DELETE BUTTON */
+
+.delete-btn{
+background:#ef5350;
+}
+
+.delete-btn:hover{
+background:#e53935;
+}
+
+/* PASSWORD MESSAGE */
+
+#strengthMessage{
+font-size:13px;
+}
+
+/* ERROR MESSAGE */
+
+.error{
+background:#ffd6d6;
+padding:10px;
+color:#b00020;
+border-radius:5px;
+margin-bottom:15px;
+}
+
+/* LOGOUT BUTTON */
+
+.logout-btn{
+background:#78909c;
+}
+
+.logout-btn:hover{
+background:#546e7a;
+}
+
+</style>
 <script>
 function togglePassword() {
     var passwordField = document.getElementById("password");

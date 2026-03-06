@@ -162,6 +162,45 @@ e.printStackTrace();
 return false;
 }
 	
+    public List<Reservation> searchReservation(String keyword) {
 
+        List<Reservation> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM reservations " +
+                     "WHERE reservation_id LIKE ? " +
+                     "OR customer_name LIKE ? " +
+                     "OR room_type LIKE ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + keyword + "%");
+            ps.setString(2, "%" + keyword + "%");
+            ps.setString(3, "%" + keyword + "%");
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                Reservation r = new Reservation();
+
+                r.setReservationId(rs.getInt("reservation_id"));
+                r.setCustomerName(rs.getString("customer_name"));
+                r.setCustomerPhone(rs.getString("customer_phone"));
+                r.setCustomerEmail(rs.getString("customer_email"));
+                r.setRoomId(rs.getInt("room_id"));
+                r.setRoomType(rs.getString("room_type"));
+                r.setCheckIn(rs.getDate("check_in").toLocalDate());
+                r.setCheckOut(rs.getDate("check_out").toLocalDate());
+
+                list.add(r);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
 	
 }

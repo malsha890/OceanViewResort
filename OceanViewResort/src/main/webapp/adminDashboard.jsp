@@ -51,7 +51,6 @@ display:inline-block;
 width:200px;
 text-align:center;
 }
-
 </style>
 </head>
 
