@@ -12,26 +12,28 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-//  EXISTING path kept + new API path added
+// ✅ EXISTING path kept + new API path added
 @WebServlet({"/login", "/api/login"})
 public class LoginServlet extends HttpServlet {
 
-    Gson gson = new Gson(); //  NEW: for JSON conversion
+    Gson gson = new Gson(); // ✅ NEW: for JSON conversion
 
-   
+    // ==============================
+    // doPost — handles both UI and API
+    // ==============================
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String path = request.getServletPath();
 
-        // NEW: if request comes from /api/login → return JSON token response
+        // ✅ NEW: if request comes from /api/login → return JSON token response
         if ("/api/login".equals(path)) {
             handleAPILogin(request, response);
             return;
         }
 
-        //  EXISTING: original UI login logic — completely unchanged
+        // ✅ EXISTING: original UI login logic — completely unchanged
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
@@ -60,7 +62,11 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-   
+    // ==============================
+    // NEW — API Login handler
+    // Accepts JSON body → returns
+    // staff info + session token
+    // ==============================
     private void handleAPILogin(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
@@ -82,7 +88,7 @@ public class LoginServlet extends HttpServlet {
             String email    = (String) body.get("email");
             String password = (String) body.get("password");
 
-            // Basic validation — check fields are not empty
+            // ✅ Basic validation — check fields are not empty
             if (email == null || email.isEmpty() ||
                 password == null || password.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -90,12 +96,12 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
-            //  Reuse your existing DAO login method
+            // ✅ Reuse your existing DAO login method
             StaffDAO dao = new StaffDAO();
             Staff staff = dao.login(email, password);
 
             if (staff != null) {
-                //  Create session (same as UI login)
+                // ✅ Create session (same as UI login)
                 HttpSession session = request.getSession();
                 session.setAttribute("staff", staff);
 
@@ -113,7 +119,7 @@ public class LoginServlet extends HttpServlet {
                 out.write(gson.toJson(result));
 
             } else {
-                // Invalid credentials
+                // ✅ Invalid credentials
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 Map<String, String> error = new HashMap<>();
                 error.put("status", "error");
@@ -131,4 +137,5 @@ public class LoginServlet extends HttpServlet {
         }
     }
 }
+
   
