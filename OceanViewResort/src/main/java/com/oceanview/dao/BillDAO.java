@@ -11,8 +11,8 @@ import java.time.temporal.ChronoUnit;
 
 public class BillDAO {
 
-    private ReservationDAO reservationDAO = new ReservationDAO();
-    private RoomDAO roomDAO = new RoomDAO();
+    protected ReservationDAO reservationDAO = new ReservationDAO();
+    protected RoomDAO roomDAO = new RoomDAO();
 
    
     // CREATE BILL

@@ -6,6 +6,7 @@ import com.oceanview.util.DBConnection;
 import java.sql.*;
 import java.util.*;
 import java.sql.Date;
+import java.time.LocalDate;
 public class ReservationDAO {
 
     RoomDAO roomDAO = new RoomDAO(); 
@@ -132,4 +133,9 @@ public class ReservationDAO {
 
         return r;
     }
+
+	public boolean isRoomAvailable(int i, LocalDate of, LocalDate of2) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

@@ -161,4 +161,11 @@ public class RoomDAO {
 
         return price;
     }
+
+
+
+	public Room getRoomById(int int1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
