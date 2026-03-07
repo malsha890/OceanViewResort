@@ -20,16 +20,15 @@ public class LoginServlet extends HttpServlet {
         try {
             StaffDAO dao = new StaffDAO();   
             Staff staff = dao.login(email, password);  
-
             if (staff != null) {
 
                 HttpSession session = request.getSession();
                 session.setAttribute("staff", staff);
 
                 if ("ADMIN".equals(staff.getRole())) {
-                	 response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+                    response.sendRedirect("admin/staff");
                 } else {
-                	response.sendRedirect(request.getContextPath() + "/staff/dashboard");
+                    response.sendRedirect("StaffDashboard.jsp");
                 }
 
             } else {

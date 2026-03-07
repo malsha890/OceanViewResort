@@ -2,17 +2,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.oceanview.model.Reservation" %>
-<% if (request.getAttribute("error") != null) { %>
-    <p style="color:red;">
-        <%= request.getAttribute("error") %>
-    </p>
-<% } %>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Reservation Management</title>
 
-  <link rel="stylesheet"
+    <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/css/style.css">
 
     <style>
@@ -35,16 +30,14 @@
         }
         table th { background: #007bff; color: white; }
         .btn {
-            padding: 6px 10px;
+            padding: 6px 12px;
             text-decoration: none;
             border-radius: 4px;
             color: white;
         }
         .btn-save { background: green; }
         .btn-cancel { background: red; }
-        .btn-view_bill{ background:  #007bff; }
-        .btn-search{ background: green; }
-        .btn-Reset{ background: red; }
+        .btn-view-bill{ background:  #007bff; }
     </style>
 </head>
 
@@ -54,9 +47,6 @@
 
     <h2>Reservation Management</h2>
 
-    <!-- ================= ADD RESERVATION FORM ================= -->
-    
-    
     <div class="form-section">
         <h3>Add Reservation</h3>
 
@@ -100,53 +90,7 @@
         </form>
     </div>
 
-    <!-- ================= RESERVATION LIST ================= -->
-   <h2>Search Reservation</h2>
-
-<form action="${pageContext.request.contextPath}/staff/reservations" method="get">
-
-    <input type="text" name="keyword" placeholder="Search reservation">
-
-    <button type="submit" name="action" value="search"  class="btn btn-search">
-        Search
-    </button>
-<a class="btn btn-Reset" href="${pageContext.request.contextPath}/staff/reservations?action=list">
-Show All
-</a>
-</form>
-<% if(request.getAttribute("reservation") != null){ %>
-
-<%
-Reservation r = (Reservation) request.getAttribute("reservation");
-%>
-
-<h3>Reservation Details</h3>
-
-<table border="1">
-
-<tr>
-<th>ID</th>
-<th>Customer</th>
-<th>Room</th>
-<th>Room Type</th>
-<th>Check In</th>
-<th>Check Out</th>
-</tr>
-
-<tr>
-
-<td><%= r.getReservationId() %></td>
-<td><%= r.getCustomerName() %></td>
-<td><%= r.getRoomId() %></td>
-<td><%= r.getRoomType() %></td>
-<td><%= r.getCheckIn() %></td>
-<td><%= r.getCheckOut() %></td>
-
-</tr>
-
-</table>
-
-<% } %>
+   
     <div class="table-section">
         <h3>Reservation List</h3>
 

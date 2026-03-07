@@ -1,17 +1,16 @@
 package com.oceanview.dao;
 
 import com.oceanview.model.Reservation;
-
 import com.oceanview.util.DBConnection;
-import java.time.LocalDate;
+
 import java.sql.*;
 import java.util.*;
 import java.sql.Date;
 public class ReservationDAO {
 
-    RoomDAO roomDAO = new RoomDAO(); // 
+    RoomDAO roomDAO = new RoomDAO(); 
 
-    //  ADD RESERVATION
+    // ADD RESERVATION
     public void addReservation(Reservation r) {
 
         String sql = "INSERT INTO reservations " +
@@ -19,7 +18,7 @@ public class ReservationDAO {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection con = DBConnection.getConnection();
-
+        		
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, r.getCustomerName());
@@ -34,8 +33,9 @@ public class ReservationDAO {
 
             ps.executeUpdate();
 
+            // Update Room
+            roomDAO.updateRoomStatus(r.getRoomId(), "BOOKED");
             
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,7 +43,7 @@ public class ReservationDAO {
         System.out.println("DB Connected");
     }
 
-    //  CANCEL
+    // CANCEL
     public void cancelReservation(int reservationId, int roomId) {
 
         String sql = "UPDATE reservations SET status='CANCELLED' WHERE reservation_id=?";
@@ -54,7 +54,7 @@ public class ReservationDAO {
             ps.setInt(1, reservationId);
             ps.executeUpdate();
 
-           
+            roomDAO.updateRoomStatus(roomId, "AVAILABLE");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,75 +132,4 @@ public class ReservationDAO {
 
         return r;
     }
-    public boolean isRoomAvailable(int roomId,
-            java.time.LocalDate checkIn,
-            java.time.LocalDate checkOut) {
-
-String sql = "SELECT COUNT(*) FROM reservations " +
-"WHERE room_id = ? " +
-"AND status = 'CONFIRMED' " +
-"AND check_in < ? " +
-"AND check_out > ?";
-
-try (Connection con = DBConnection.getConnection();
-PreparedStatement ps = con.prepareStatement(sql)) {
-
-ps.setInt(1, roomId);
-ps.setDate(2, java.sql.Date.valueOf(checkOut));
-ps.setDate(3, java.sql.Date.valueOf(checkIn));
-
-ResultSet rs = ps.executeQuery();
-
-if (rs.next()) {
-return rs.getInt(1) == 0; // 0 = no overlap
-}
-
-} catch (Exception e) {
-e.printStackTrace();
-}
-
-return false;
-}
-	
-    public List<Reservation> searchReservation(String keyword) {
-
-        List<Reservation> list = new ArrayList<>();
-
-        String sql = "SELECT * FROM reservations " +
-                     "WHERE reservation_id LIKE ? " +
-                     "OR customer_name LIKE ? " +
-                     "OR room_type LIKE ?";
-
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setString(1, "%" + keyword + "%");
-            ps.setString(2, "%" + keyword + "%");
-            ps.setString(3, "%" + keyword + "%");
-
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-
-                Reservation r = new Reservation();
-
-                r.setReservationId(rs.getInt("reservation_id"));
-                r.setCustomerName(rs.getString("customer_name"));
-                r.setCustomerPhone(rs.getString("customer_phone"));
-                r.setCustomerEmail(rs.getString("customer_email"));
-                r.setRoomId(rs.getInt("room_id"));
-                r.setRoomType(rs.getString("room_type"));
-                r.setCheckIn(rs.getDate("check_in").toLocalDate());
-                r.setCheckOut(rs.getDate("check_out").toLocalDate());
-
-                list.add(r);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return list;
-    }
-	
 }

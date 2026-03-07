@@ -11,12 +11,8 @@ public class RoomDAO {
 
 	
 
-	private Connection con;
-
-    public RoomDAO(Connection conn) {
-        this.con = conn;}
- public RoomDAO() {
-    }
+	 public RoomDAO() {
+	    }
 
 
 
@@ -91,7 +87,7 @@ public class RoomDAO {
         return true;
     }
     }
-    //  Auto update room status
+    // Auto update room status
     public void updateRoomStatus(int roomId, String status) throws Exception {
         String sql = "UPDATE rooms SET status=? WHERE room_id=?";
         try (Connection con = DBConnection.getConnection();
@@ -103,41 +99,27 @@ public class RoomDAO {
     }
     // Search
     public List<Room> searchRoom(String keyword) throws Exception {
-
         List<Room> list = new ArrayList<>();
-
-        String sql = "SELECT * FROM rooms WHERE " +
-                     "room_number LIKE ? OR " +
-                     "room_type LIKE ? OR " +
-                     "status LIKE ?";
-
+        String sql = "SELECT * FROM rooms WHERE room_number LIKE ?";
         try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        PreparedStatement ps = con.prepareStatement(sql)){
+        ps.setString(1, "%" + keyword + "%");
+        ResultSet rs = ps.executeQuery();
 
-            String searchKeyword = "%" + keyword + "%";
-
-            ps.setString(1, searchKeyword);
-            ps.setString(2, searchKeyword);
-            ps.setString(3, searchKeyword);
-
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-
-                Room r = new Room();
-                r.setRoomId(rs.getInt("room_id"));
-                r.setRoomNumber(rs.getString("room_number"));
-                r.setRoomType(rs.getString("room_type"));
-                r.setPricePerNight(rs.getDouble("price_per_night"));
-                r.setCapacity(rs.getInt("capacity"));
-                r.setStatus(rs.getString("status"));
-
-                list.add(r);
-            }
+        while (rs.next()) {
+            Room r = new Room();
+            r.setRoomId(rs.getInt("room_id"));
+            r.setRoomNumber(rs.getString("room_number"));
+            r.setRoomType(rs.getString("room_type"));
+            r.setPricePerNight(rs.getDouble("price_per_night"));
+            r.setCapacity(rs.getInt("capacity"));
+            r.setStatus(rs.getString("status"));
+            list.add(r);
         }
-
         return list;
     }
+    }
+	//prevent booking overlapping 
     public boolean isRoomAvailable(int roomId, Date checkIn, Date checkOut) throws Exception {
 
         String sql = "SELECT COUNT(*) FROM reservations WHERE room_id=? " +
@@ -156,6 +138,7 @@ public class RoomDAO {
     }
         
 }
+	//calculate bill
     public BigDecimal getRoomPriceById(int roomId) {
 
         BigDecimal price = BigDecimal.ZERO;
@@ -178,25 +161,4 @@ public class RoomDAO {
 
         return price;
     }
- // Get Room By ID
-    public Room getRoomById(int roomId) throws Exception {
-        Room r = null;
-        String sql = "SELECT * FROM rooms WHERE room_id = ?";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, roomId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                r = new Room();
-                r.setRoomId(rs.getInt("room_id"));
-                r.setRoomNumber(rs.getString("room_number"));
-                r.setRoomType(rs.getString("room_type"));
-                r.setPricePerNight(rs.getDouble("price_per_night"));
-                r.setCapacity(rs.getInt("capacity"));
-                r.setStatus(rs.getString("status"));
-            }
-            return r; // returns null if not found
-        }
-    }
-   
-    }
+}

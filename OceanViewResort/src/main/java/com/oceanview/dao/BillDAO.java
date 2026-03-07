@@ -11,15 +11,18 @@ import java.time.temporal.ChronoUnit;
 
 public class BillDAO {
 
-    protected ReservationDAO reservationDAO = new ReservationDAO();
-    protected RoomDAO roomDAO = new RoomDAO();
+    private ReservationDAO reservationDAO = new ReservationDAO();
+    private RoomDAO roomDAO = new RoomDAO();
 
+   
+    // CREATE BILL
+  
     public void createBill(int reservationId) {
 
         try (Connection con = DBConnection.getConnection()) {
 
-            // Use getters so mock DAOs are used during testing
-            Reservation reservation = getReservationDAO().getReservationById(reservationId);
+            //  Get reservation details
+            Reservation reservation = reservationDAO.getReservationById(reservationId);
 
             if (reservation == null) {
                 System.out.println("Reservation not found!");
@@ -35,10 +38,10 @@ public class BillDAO {
                 days = 1;
             }
 
-            //  Use getter so mock RoomDAO is used during testing
-            BigDecimal roomRate = getRoomDAO().getRoomPriceById(reservation.getRoomId());
+            //  Get room rate from DB
+            BigDecimal roomRate = roomDAO.getRoomPriceById(reservation.getRoomId());
 
-            // Calculate charges
+            //  Calculate charges
             BigDecimal roomCharge = roomRate.multiply(BigDecimal.valueOf(days));
 
             BigDecimal tax = roomCharge
@@ -75,7 +78,9 @@ public class BillDAO {
         }
     }
 
+    
     // GET BILL BY RESERVATION
+
     public Bill getBillByReservation(int reservationId) {
 
         Bill bill = null;
@@ -89,7 +94,9 @@ public class BillDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
+
                 bill = new Bill();
+
                 bill.setBillId(rs.getInt("bill_id"));
                 bill.setReservationId(rs.getInt("reservation_id"));
                 bill.setRoomCharge(rs.getBigDecimal("room_charge"));
@@ -106,7 +113,9 @@ public class BillDAO {
         return bill;
     }
 
+    
     // MARK BILL AS PAID
+    
     public void markAsPaid(int billId) {
 
         try (Connection con = DBConnection.getConnection()) {
@@ -123,8 +132,4 @@ public class BillDAO {
             e.printStackTrace();
         }
     }
-
-    // Protected getters — allow BillDAOTestable to inject mock DAOs in tests
-    protected ReservationDAO getReservationDAO() { return reservationDAO; }
-    protected RoomDAO getRoomDAO()               { return roomDAO; }
 }
